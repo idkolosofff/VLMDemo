@@ -1,0 +1,46 @@
+services:
+  internvl-demo-cpu:
+    build:
+      context: .
+      args:
+        # Use python slim image for CPU; let pip install the correct platform-specific torch
+        BASE_IMAGE: python:3.10-slim
+    env_file: .env
+    environment:
+      HF_HOME: /cache
+      HF_CACHE_DIR: /cache
+      ARTIFACT_DIR: /artifacts
+      # Point to the specific subdirectory where we downloaded the flat files
+      # This works offline without 'transformers' trying to check the Hub
+      MODEL_NAME: ${MODEL_NAME:-/cache/OpenGVLab/InternVL3_5-1B}
+    ports:
+      - "${PORT:-7860}:7860"
+    volumes:
+      # specific cache volume for persistence
+      - ./data/model_cache:/cache
+      - ./model_artifacts:/artifacts
+    command: ["python", "-m", "app.main"]
+
+  internvl-demo-gpu:
+    build:
+      context: .
+      args:
+        BASE_IMAGE: pytorch/pytorch:2.2.2-cuda12.1-cudnn9-runtime
+    env_file: .env
+    environment:
+      HF_HOME: /cache
+      HF_CACHE_DIR: /cache
+      ARTIFACT_DIR: /artifacts
+      DEVICE: cuda
+      MODEL_NAME: ${MODEL_NAME:-/cache/OpenGVLab/InternVL3_5-1B}
+    ports:
+      - "${PORT:-7860}:7860"
+    volumes:
+      - ./data/model_cache:/cache
+      - ./model_artifacts:/artifacts
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    command: ["python", "-m", "app.main"]
