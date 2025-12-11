@@ -15,6 +15,14 @@
 
 Приложение валидирует входные данные и отображает понятные ошибки.
 
+## Примеры работы
+
+### VQA & Captioning
+![VQA Example](VQA_img.jpg)
+
+### Visual Grounding / Object Detection
+![Grounding Example](Grounding_img.jpg)
+
 ## Запуск через Docker (Рекомендуется)
 
 Приложение запускается в контейнере Docker. Поддерживаются режимы CPU и GPU.
