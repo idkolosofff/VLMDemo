@@ -90,7 +90,12 @@ class InternVLService:
             if self._model is not None:
                 return
 
-            dtype = torch.bfloat16 if self.settings.resolved_device == "cuda" else torch.float32
+            dtype = torch.float32
+            if self.settings.resolved_device == "cuda":
+                dtype = torch.bfloat16
+            elif self.settings.resolved_device == "mps":
+                dtype = torch.float16
+
             self._device = torch.device(self.settings.resolved_device)
 
             print(f"DEBUG: Loading model from {self.settings.model_name}")
@@ -229,7 +234,7 @@ class InternVLService:
                      self._model.img_context_token_id = img_context_id
 
             if self._device.type != "cuda":
-                self._model.to("cpu")
+                self._model.to(self._device)
             self._model.eval()
 
     def _build_vqa_prompt(self, question: Optional[str]) -> str:

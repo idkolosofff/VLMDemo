@@ -25,7 +25,7 @@ services:
     build:
       context: .
       args:
-        BASE_IMAGE: pytorch/pytorch:2.2.2-cuda12.1-cudnn9-runtime
+        BASE_IMAGE: pytorch/pytorch:2.2.2-cuda12.1-cudnn8-runtime
     env_file: .env
     environment:
       HF_HOME: /cache

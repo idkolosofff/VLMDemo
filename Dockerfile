@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=pytorch/pytorch:2.2.2-cuda12.1-cudnn9-runtime
+ARG BASE_IMAGE=pytorch/pytorch:2.2.2-cuda12.1-cudnn8-runtime
 FROM ${BASE_IMAGE}
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
