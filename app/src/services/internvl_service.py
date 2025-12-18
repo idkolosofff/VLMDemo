@@ -260,7 +260,18 @@ class InternVLService:
         assert self._processor and self._model and self._tokenizer and self._device
 
         inputs = self._processor(images=image, text=prompt, return_tensors="pt")
-        inputs = {k: v.to(self._device) if hasattr(v, "to") else v for k, v in inputs.items()}
+        
+        # Determine target dtype from model parameters
+        target_dtype = self._model.dtype
+
+        inputs = {
+            k: v.to(self._device) if hasattr(v, "to") else v 
+            for k, v in inputs.items()
+        }
+
+        # Explicitly cast pixel_values to model dtype (e.g. bfloat16)
+        if "pixel_values" in inputs:
+             inputs["pixel_values"] = inputs["pixel_values"].to(target_dtype)
 
         with torch.inference_mode():
             output_ids = self._model.generate(

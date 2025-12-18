@@ -25,7 +25,9 @@ services:
     build:
       context: .
       args:
-        BASE_IMAGE: pytorch/pytorch:2.2.2-cuda12.1-cudnn8-runtime
+        # Use python slim image to let pip install the latest torch (compatible with numpy 2.x)
+        # matching the CPU container's behavior.
+        BASE_IMAGE: python:3.10-slim
     env_file: .env
     environment:
       HF_HOME: /cache
